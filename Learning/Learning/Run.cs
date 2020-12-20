@@ -15,7 +15,7 @@ namespace Learning
 			string[] parameters;
 			while (true)
             {
-				displayList();
+				DisplayList();
 				command = Console.ReadLine();
 				if (command == "exit")
 				{
@@ -28,21 +28,21 @@ namespace Learning
 
 				if (operation == "+")
                 {
-					displayResult(a + b);
+					DisplayResult(a + b);
 				}
 				else if (operation == "-")
 				{
-					displayResult(a - b);
+					DisplayResult(a - b);
 				}
 				else if (operation == "*")
 				{
-					displayResult(a * b);
+					DisplayResult(a * b);
 				}
 				else if (operation == "/")
 				{
 					if (b != 0)
                     {
-						displayResult(a / b);
+						DisplayResult(a / b);
 					}
 					else
                     {
@@ -52,12 +52,12 @@ namespace Learning
 				}
 				else if (operation == "%")
 				{
-					displayResult(a % b);
+					DisplayResult(a % b);
 				}
 			}			
 		}
 
-		static void displayList()
+		static void DisplayList()
         {
 			Console.WriteLine("");
 			Console.WriteLine("========================================");
@@ -72,7 +72,7 @@ namespace Learning
 			Console.WriteLine("");
 		}
 
-		static void displayResult(int result)
+		static void DisplayResult(int result)
 		{
 			Console.WriteLine("result: {0}", result);
 			// Console.WriteLine($"result: {result}"); - alternative

@@ -11,16 +11,18 @@ namespace ShopConsole
 		private readonly string[] cups = { "Large", "Small" };
 		private readonly Random rand = new Random();
 		private readonly List<Item> itemList = new List<Item>();
+		private User user;
 
-		public void run()
+		public void Run()
 		{
-			string command;
-			// string[] parameters;
-			
-			initList();
+			string command, itemClass, title;
+			string[] parameters;
+			int quantity;
+			user = new User { Balance = rand.Next(100, 500) };
+			InitList();
 			while (true)
 			{
-				displayMenu();
+				DisplayMenu();
 				command = Console.ReadLine();
 				if (command == "Exit")
 				{
@@ -28,60 +30,104 @@ namespace ShopConsole
 				} 
 				else if (command == "List")
 				{
-					displayList();
+					DisplayList();
 				}
-				// parameters = command.Split(" ");
+				else if (command == "Balance")
+				{
+					DisplayBalance();
+				}
+				else
+                {
+					// a potential to split to more methods if needed
+					parameters = command.Split(" ");
+					command = parameters[0];
+					if (command == "Increase")
+					{
+						user.Balance += Int32.Parse(parameters[1]);
+					}
+					itemClass = parameters[1];
+					title = parameters[2];
+					quantity = Int32.Parse(parameters[3]);
+					if (command == "Buy")
+					{
+						foreach (Item item in itemList)
+						{
+							if (item.ToString() == itemClass && item.Title == title)
+							{
+								if (item.Quantity - quantity < 0)
+								{
+									Console.WriteLine("Not enough merchandise");
+								}
+								else
+								{
+									if (user.Balance - (quantity * item.Price) < 0)
+									{
+										Console.WriteLine("Not enough balance");
+									}
+									else
+									{
+										user.Balance -= quantity * item.Price;
+										item.Quantity -= quantity;
+									}
+								}
+								break;
+							}
+						}
+					}
+					else if (command == "Add")
+					{
+						foreach (Item item in itemList)
+						{
+							if (item.ToString() == itemClass && item.Title == title)
+							{
+								item.Quantity += quantity;
+								break;
+							}
+						}
+					}
+				}
 			}
 		}
 
-/*
-1. "List" išspausdina informacija, ką galima nusipirkti parduotuvėje ir kokios kainos. išpirktų produktų neturėtų rodyti.
-2. "Buy Candy 20" - turėtų nupirkti visus egzistuojančius toks item egzistuoja parduotuvėje ir yra toks kiekis. Jei ne, turėtų parodyti atitinkamą žinutę.
-3. "Add Cup 30" - turėtų papildyti parduotuvę su atitinkamu produktu ir kiekiu. Tai turętų atsivaizduoti ir "List" komandoje. 
-3a. Jei tokiu produktų jau yra, papildyti.
+		// Add: don't create brand new objects just yet
 
--> Sukurti Vartotojo klasę, kuri laikytų pinigų balancą.
-
-4. "Show Balance" parodyti kiek pinigų liko.
-5. Modifikuoti Buy komandą, kuri neleistų nusipirkti, jei neužtenka pinigų. 
-6. "Topup 30": papildytų sąskaitą.
-*/
-
-		// switch/if?
-		// use Lists
-		// randomise goods
-		// use statics?
-
-		private void initList()
+		private void DisplayBalance()
         {
-            foreach (var book in books)
+			Console.WriteLine($"User Balance is: {user.Balance}");
+		}
+
+		private void InitList()
+        {
+            foreach (string book in books)
             {
 				itemList.Add(new Book{ Title = book, Quantity = rand.Next(1, 5), Price = rand.Next(10, 50) });
 			}
-
-			foreach (var candy in candies)
+			foreach (string candy in candies)
 			{
 				itemList.Add(new Candy { Title = candy, Quantity = rand.Next(10, 50), Price = rand.Next(1, 5) });
 			}
-
-			foreach (var cup in cups)
+			foreach (string cup in cups)
 			{
 				itemList.Add(new Cup { Title = cup, Quantity = rand.Next(2, 8), Price = rand.Next(3, 18) });
 			}
 		}
 
-		private void displayMenu()
+		private void DisplayMenu()
 		{
 			Console.WriteLine("");
 			Console.WriteLine("========================================");
 			Console.WriteLine("Please enter command, options are:");
 			Console.WriteLine("List");
+			Console.WriteLine("Buy Item Title Quantity");
+			Console.WriteLine("Add Item Title Quantity");
+			Console.WriteLine("Balance");
+			Console.WriteLine("Increase Amount");
 			Console.WriteLine("Exit");
 			Console.WriteLine("========================================");
 			Console.WriteLine("");
 		}
 
-		private void displayList()
+		private void DisplayList()
 		{
 			Console.WriteLine("");
 			Console.WriteLine("========================================");
@@ -89,18 +135,13 @@ namespace ShopConsole
 			Console.WriteLine("========================================");
 			foreach (var item in itemList)
 			{
-				Console.WriteLine($"{item} - {item.Title} x {item.Quantity} ({item.Price})");
+				if (item.Quantity > 0)
+                {
+					Console.WriteLine($"{item} - {item.Title} x {item.Quantity} ({item.Price})");
+                }
 			}
 			Console.WriteLine("========================================");
 			Console.WriteLine("");
 		}
 	}
 }
-
-			/*int a, b;
-			, operation;
-				a = Int32.Parse(parameters[0]);
-				b = Int32.Parse(parameters[2]);
-				operation = parameters[1];
-			}*/
-

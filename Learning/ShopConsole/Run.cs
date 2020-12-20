@@ -7,7 +7,7 @@ namespace ShopConsole
         static void Main(string[] args)
         {
             Shop shop = new Shop();
-            shop.run();
+            shop.Run();
         }
     }
 }
