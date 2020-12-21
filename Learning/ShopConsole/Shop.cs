@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ShopConsole.Items;
 
 namespace ShopConsole
@@ -18,40 +19,42 @@ namespace ShopConsole
 			string command, itemClass, title;
 			string[] parameters;
 			int quantity;
-			user = new User { Balance = rand.Next(100, 500) };
+			user = new User(rand);
 			InitList();
 			while (true)
 			{
 				DisplayMenu();
-				command = Console.ReadLine();
-				if (command == "Exit")
+				command = Console.ReadLine().ToLower();
+				if (command == "exit")
 				{
 					break;
 				} 
-				else if (command == "List")
+				else if (command == "list")
 				{
 					DisplayList();
 				}
-				else if (command == "Balance")
+				else if (command == "balance")
 				{
 					DisplayBalance();
 				}
 				else
                 {
 					// a potential to split to more methods if needed
+					// do that!
 					parameters = command.Split(" ");
 					command = parameters[0];
-					if (command == "Increase")
+					if (command == "increase")
 					{
 						user.Balance += Int32.Parse(parameters[1]);
 					}
-					itemClass = parameters[1];
+					itemClass = parameters[1]; // test with case of "aaa"
 					title = parameters[2];
 					quantity = Int32.Parse(parameters[3]);
-					if (command == "Buy")
+					if (command == "buy")
 					{
 						foreach (Item item in itemList)
 						{
+							// try LinQ?
 							if (item.ToString() == itemClass && item.Title == title)
 							{
 								if (item.Quantity - quantity < 0)
@@ -74,15 +77,14 @@ namespace ShopConsole
 							}
 						}
 					}
-					else if (command == "Add")
+					else if (command == "add")
 					{
-						foreach (Item item in itemList)
+						// try a LinQ variant to return first one only
+						List<Item> itemListFiltered = (List<Item>) itemList.Where(i => i.ToString() == itemClass && i.Title == title);
+						foreach (Item item in itemListFiltered)
 						{
-							if (item.ToString() == itemClass && item.Title == title)
-							{
-								item.Quantity += quantity;
-								break;
-							}
+							item.Quantity += quantity;
+							break;
 						}
 					}
 				}
@@ -133,7 +135,8 @@ namespace ShopConsole
 			Console.WriteLine("========================================");
 			Console.WriteLine("Items for sale");
 			Console.WriteLine("========================================");
-			foreach (var item in itemList)
+			// try LinQ?
+			foreach (Item item in itemList)
 			{
 				if (item.Quantity > 0)
                 {
