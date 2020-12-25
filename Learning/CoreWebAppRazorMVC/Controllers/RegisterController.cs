@@ -18,21 +18,16 @@ namespace CoreWebAppRazorMVC.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        /*[HttpGet]
-        public IActionResult Get(RegisterViewModel model)
-        {
-            return View();
-        }*/
-
         [HttpPost]
         public IActionResult Post(RegisterViewModel model)
         {
-            return View();
+            return View("Index", model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
