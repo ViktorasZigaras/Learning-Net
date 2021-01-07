@@ -7,9 +7,9 @@ namespace StarterShopWebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FruitController : ItemController<Fruit>
+    public class VeggyController : ItemController<Fruit>
     {
-        public FruitController(IShopService<Fruit> shopService, ItemContext context) : base(shopService, context)
+        public VeggyController(IShopService<Fruit> shopService, ItemContext context) : base(shopService, context)
         {
         }
     }

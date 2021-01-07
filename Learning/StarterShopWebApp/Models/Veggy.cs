@@ -1,6 +1,6 @@
 ﻿namespace StarterShopWebApp.Models
 {
-    public class Fruit : Item
+    public class Veggy : Item
     {
     }
 }

@@ -1,49 +1,49 @@
-﻿using StarterShopWebApp.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using StarterShopWebApp.Models;
 
 namespace StarterShopWebApp.Services
 {
-    public class ShopService
+    public class ShopService<T> : IShopService<T> where T : Item
     {
-        private List<Item> Fruits = new List<Item>();
+        public DbContext Context { get; set; }
 
-        public ShopService()
+        public async Task<List<T>> GetAllItemsAsync()
         {
-            Fruits.Add(new Fruit { Name = "Apple", Id = 1 });
-            Fruits.Add(new Fruit { Name = "Orange", Id = 2 });
-            Fruits.Add(new Fruit { Name = "Fig", Id = 3 });
-            Fruits.Add(new Fruit { Name = "Banana", Id = 4 });
+            return await Context.Set<T>().ToListAsync();
+            // return Fruits;
         }
 
-        public List<Item> GetItems()
+        public async Task<T> GetItemAsync(int id)
         {
-            return Fruits;
+            return await Context.Set<T>().FindAsync(id);
+            // return Fruits.Where(item => item.Id == id).First();
         }
 
-        public Item GetItem(int id)
+        public async Task AddItemAsync(T t)
         {
-            return Fruits.Where(item => item.Id == id).First();
+            Context.Set<T>().Add(t);
+            await Context.SaveChangesAsync();
+            // Fruits.Add(item);
         }
 
-        public void AddItem(Item item)
+        public async Task UpdateItemAsync(int id, T t)
         {
-            Fruits.Add(item);
+            var item = await GetItemAsync(id);
+            item.Name = t.Name;
+            await Context.SaveChangesAsync();
+            // Item targetItem = Fruits.FirstOrDefault(target => target.Id == item.Id);
+            // if (targetItem != null) targetItem.Name = item.Name;
         }
 
-        public void UpdateItem(Item item)
+        public async Task DeleteItemAsync(int id)
         {
-            Item targetItem = Fruits.FirstOrDefault(target => target.Id == item.Id);
-            if (targetItem != null) targetItem.Name = item.Name;
-        }
-
-        internal void DeleteItem(int id)
-        {
-            Fruits.Remove(Fruits.Where(item => item.Id == id).First());
+            var item = await GetItemAsync(id);
+            Context.Set<T>().Remove(item);
+            await Context.SaveChangesAsync();
+            // Fruits.Remove(Fruits.Where(item => item.Id == id).First());
         }
     }
 }
-
-// fruits, veggies, seeds + generics
