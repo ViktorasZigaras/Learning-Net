@@ -7,9 +7,7 @@ namespace TodoListWebApi.Repository.Data
     {
         public DbSet<Todo> Todos { get; set; }
 
-        public DataContext(DbContextOptions options) : base(options)
-        {
-        }
+        public DataContext(DbContextOptions options) : base(options) {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
